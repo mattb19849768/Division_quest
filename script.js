@@ -45,7 +45,7 @@ answerInput.readOnly = true;
   /* ===========================
      App State
   =========================== */
-  let players = JSON.parse(localStorage.getItem('ttPlayers') || '[]');
+  let players = JSON.parse(localStorage.getItem('dvPlayers') || '[]');
   let activeIndex = 0, activePlayer = null;
   let selectedTables = [], mode = 'practice', multipleChoice = false;
   let questions = [], currentQ = 0, score = 0, streak = 0, startTime = 0;
@@ -334,13 +334,13 @@ createMusicToggleUI();
     if(!name){ alert('Enter a name'); return; }
     if(!sel){ alert('Pick an avatar'); return; }
     players.push({name, avatar: sel.textContent, lastScore:0, coins:0});
-    localStorage.setItem('ttPlayers',JSON.stringify(players));
+    localStorage.setItem('dvPlayers',JSON.stringify(players));
     newPlayer.value=''; renderAvatars(); refreshPlayers();
   });
 
   resetPlayersBtn?.addEventListener('click',()=>{
     if(!confirm('Clear saved players?')) return;
-    players=[]; localStorage.removeItem('ttPlayers'); ensureDefaultPlayer(); renderAvatars(); refreshPlayers();
+    players=[]; localStorage.removeItem('dvPlayers'); ensureDefaultPlayer(); renderAvatars(); refreshPlayers();
   });
 
   newPlayer?.addEventListener('keydown',e=>{ if(e.key==='Enter') addPlayerBtn.click(); });
@@ -348,7 +348,7 @@ createMusicToggleUI();
   function ensureDefaultPlayer(){
     if(!players||players.length===0){
       players=[{name:'Player 1', avatar:defaultAvatars[0], lastScore:0, coins:0}];
-      localStorage.setItem('ttPlayers',JSON.stringify(players));
+      localStorage.setItem('dvPlayers',JSON.stringify(players));
     }
   }
 
@@ -553,7 +553,7 @@ function generateQuestions() {
       missionCoins += 5;
 
       // persist immediately
-      localStorage.setItem('ttPlayers', JSON.stringify(players));
+      localStorage.setItem('dvPlayers', JSON.stringify(players));
 
       // update displays
       updateTotalCoinsDisplay();
@@ -720,7 +720,7 @@ function generateQuestions() {
     // ensure lastScore stored and saved
     if(players[activeIndex]) {
       players[activeIndex].lastScore = score;
-      localStorage.setItem('ttPlayers', JSON.stringify(players));
+      localStorage.setItem('dvPlayers', JSON.stringify(players));
     }
 
     bgMusic && fadeAudio(bgMusic, Math.max(0.15, sfxVolume*0.4), 400);
@@ -760,14 +760,14 @@ function generateQuestions() {
   saveToLeaderboard?.addEventListener('click', ()=>{
     if (players[activeIndex]) {
       players[activeIndex].lastScore = score;
-      localStorage.setItem('ttPlayers', JSON.stringify(players));
+      localStorage.setItem('dvPlayers', JSON.stringify(players));
       updateLeaderboard();
       alert('Score saved to player.');
     }
 	// After finishing a round
 if (players[activeIndex]) {
   const now = Date.now();
-  let log = JSON.parse(localStorage.getItem(`ttPlayer_${activePlayer.name}_${mode}`) || '[]');
+  let log = JSON.parse(localStorage.getItem(`dvPlayer_${activePlayer.name}_${mode}`) || '[]');
 
   if (mode === 'practice' || mode === 'chaos') {
     // log fastest time in seconds
@@ -778,7 +778,7 @@ if (players[activeIndex]) {
     log.push({ ts: now, score: score });
   }
 
-  localStorage.setItem(`ttPlayer_${activePlayer.name}_${mode}`, JSON.stringify(log));
+  localStorage.setItem(`dvPlayer_${activePlayer.name}_${mode}`, JSON.stringify(log));
 }
 
   });
@@ -797,7 +797,7 @@ if (players[activeIndex]) {
   // Collect leaderboard entries for this mode
   let entries = [];
   players.forEach(p => {
-    const log = JSON.parse(localStorage.getItem(`ttPlayer_${p.name}_${currentMode}`) || '[]');
+    const log = JSON.parse(localStorage.getItem(`dvPlayer_${p.name}_${currentMode}`) || '[]');
     if (log.length) {
       if (currentMode === 'practice' || currentMode === 'chaos') {
         // fastest time
